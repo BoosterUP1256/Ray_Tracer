@@ -88,6 +88,17 @@ Hittable_list two_spheres()
     return objects;
 }
 
+Hittable_list two_perlin_spheres()
+{
+    Hittable_list objects;
+
+    auto pertext = make_shared<Noise_texture>(4);
+    objects.add(make_shared<Sphere>(Point3(0, -1000, 0), 1000, make_shared<Lambertian>(pertext)));
+    objects.add(make_shared<Sphere>(Point3(0, 2, 0), 2, make_shared<Lambertian>(pertext)));
+
+    return objects;
+}
+
 int main()
 {
     // Image
@@ -98,7 +109,7 @@ int main()
     const int samples_per_pixel = 100;
     const int max_depth = 50;
 
-    Surface image(image_width, image_height, "checker_spheres.png");
+    Surface image(image_width, image_height, "perlin6.png");
 
     // World
 
@@ -118,9 +129,16 @@ int main()
         aperture = 0.1;
         break;
 
-    default:
     case 2:
         world = two_spheres();
+        lookfrom = Point3(13, 2, 3);
+        lookat = Point3(0, 0, 0);
+        vfov = 20.0;
+        break;
+
+    default:
+    case 3:
+        world = two_perlin_spheres();
         lookfrom = Point3(13, 2, 3);
         lookat = Point3(0, 0, 0);
         vfov = 20.0;
@@ -151,5 +169,4 @@ int main()
         }
     }
     image.render();
-    //testing brach
 }

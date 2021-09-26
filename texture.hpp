@@ -4,6 +4,7 @@
 #include <utility>
 
 #include "ray.hpp"
+#include "perlin.hpp"
 
 class Texture {
 public:
@@ -49,6 +50,22 @@ public:
             return odd->value(u, v, p);
         else
             return even->value(u, v, p);
+    }
+};
+
+class Noise_texture : public Texture {
+public:
+    Perlin noise;
+    double scale;
+
+    Noise_texture() = default;
+
+    explicit Noise_texture(double sc)
+            :scale(sc) { }
+
+    Color value(double u, double v, const Point3& p) const override
+    {
+        return Color(1, 1, 1)*0.5*(1+sin(scale*p.z+10*noise.turb(p)));
     }
 };
 
