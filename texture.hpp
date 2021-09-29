@@ -1,10 +1,10 @@
 #ifndef RAY_TRACER_TEXTURE_HPP
 #define RAY_TRACER_TEXTURE_HPP
 
-#include <utility>
-
 #include "ray.hpp"
 #include "perlin.hpp"
+
+//#include "rtw_stb_image.hpp"
 
 class Texture {
 public:
@@ -66,6 +66,26 @@ public:
     Color value(double u, double v, const Point3& p) const override
     {
         return Color(1, 1, 1)*0.5*(1+sin(scale*p.z+10*noise.turb(p)));
+    }
+};
+
+class Image_texture : public Texture {
+private:
+    unsigned char* data;
+    int width, height;
+    int bytes_per_scanline;
+
+public:
+    const static int bytes_per_pixel = 3;
+
+    Image_texture()
+            :data(nullptr), width(0), height(0), bytes_per_scanline(0) { }
+
+    Image_texture(const char* filename)
+    {
+        int components_per_pixel = bytes_per_pixel;
+
+        //data = stbi_load(filename, &width, &height, &components_per_pixel, components_per_pixel);
     }
 };
 

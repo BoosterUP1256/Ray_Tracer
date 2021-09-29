@@ -1,8 +1,6 @@
 #include "surface.hpp"
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-
-#include "stb_image_write.h"
+#include "rtw_stb_image.hpp"
 
 Surface::Surface(int _width, int _height, const char* _filename)
         :width(_width), height(_height), filename(_filename)
@@ -17,6 +15,7 @@ Surface::~Surface()
 
 void Surface::write_color(Color pixel_color, int samples_per_pixel)
 {
+    // TODO: impement SDL in surface class, will have to refactor from main file
     double r = pixel_color.x;
     double g = pixel_color.y;
     double b = pixel_color.z;

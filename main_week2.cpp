@@ -11,14 +11,14 @@ Color ray_color(const Ray& r, const Hittable& world, int depth)
 
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if (depth<=0)
-        return Color(0, 0, 0);
+        return {0, 0, 0};
 
     if (world.hit(r, 0.001, infinity, rec)) {
         Ray scattered;
         Color attenuation;
         if (rec.mat_ptr->scatter(r, rec, attenuation, scattered))
             return attenuation*ray_color(scattered, world, depth-1);
-        return Color(0, 0, 0);
+        return {0, 0, 0};
     }
 
     Vec3 unit_direction = unit_vector(r.get_direction());
@@ -99,7 +99,7 @@ Hittable_list two_perlin_spheres()
     return objects;
 }
 
-int main()
+int main(int argc, char** argv)
 {
     // Image
 
@@ -169,4 +169,5 @@ int main()
         }
     }
     image.render();
+    return 0;
 }
