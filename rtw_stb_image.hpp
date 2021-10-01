@@ -10,6 +10,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 
 #include "external/stb_image.h"
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+
 #include "external/stb_image_write.h"
 
 // Restore warning levels.
@@ -19,6 +22,3 @@
 #endif
 
 #endif
-
-
-// TODO: refactor stb_image usages to go through this header file and implement textures 6.1

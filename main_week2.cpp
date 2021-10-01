@@ -99,6 +99,15 @@ Hittable_list two_perlin_spheres()
     return objects;
 }
 
+Hittable_list earth()
+{
+    auto earth_texture = make_shared<Image_texture>("../resources/earthmap.jpg");
+    auto earth_surface = make_shared<Lambertian>(earth_texture);
+    auto globe = make_shared<Sphere>(Point3(0, 0, 0), 2, earth_surface);
+
+    return Hittable_list(globe);
+}
+
 int main(int argc, char** argv)
 {
     // Image
@@ -109,7 +118,7 @@ int main(int argc, char** argv)
     const int samples_per_pixel = 100;
     const int max_depth = 50;
 
-    Surface image(image_width, image_height, "perlin6.png");
+    Surface image(image_width, image_height, "earth.png");
 
     // World
 
@@ -136,9 +145,16 @@ int main(int argc, char** argv)
         vfov = 20.0;
         break;
 
-    default:
     case 3:
         world = two_perlin_spheres();
+        lookfrom = Point3(13, 2, 3);
+        lookat = Point3(0, 0, 0);
+        vfov = 20.0;
+        break;
+
+    default:
+    case 4:
+        world = earth();
         lookfrom = Point3(13, 2, 3);
         lookat = Point3(0, 0, 0);
         vfov = 20.0;
@@ -154,6 +170,7 @@ int main(int argc, char** argv)
     Camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
 
     // Render
+    SDL_Event event;
 
     for (int j = image_height-1; j>=0; j--) {
         std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
@@ -166,8 +183,16 @@ int main(int argc, char** argv)
                 pixel_color += ray_color(r, world, max_depth);
             }
             image.write_color(pixel_color, samples_per_pixel);
+
         }
     }
+
+    while (true) {
+        if (SDL_PollEvent(&event) && event.type==SDL_QUIT)
+            break;
+    }
     image.render();
+
+    SDL_Quit();
     return 0;
 }

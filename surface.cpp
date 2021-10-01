@@ -1,21 +1,28 @@
 #include "surface.hpp"
 
-#include "rtw_stb_image.hpp"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+
+#include "external/stb_image_write.h"
 
 Surface::Surface(int _width, int _height, const char* _filename)
         :width(_width), height(_height), filename(_filename)
 {
     pixels = new uint8_t[width*height*3];
+    SDL_Init(SDL_INIT_VIDEO);
+    SDL_CreateWindowAndRenderer(width, height, 0, &window, &renderer);
+    SDL_SetWindowTitle(window, "Ray Tracer");
+
 }
 
 Surface::~Surface()
 {
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
     delete[] pixels;
 }
 
 void Surface::write_color(Color pixel_color, int samples_per_pixel)
 {
-    // TODO: impement SDL in surface class, will have to refactor from main file
     double r = pixel_color.x;
     double g = pixel_color.y;
     double b = pixel_color.z;
@@ -27,9 +34,17 @@ void Surface::write_color(Color pixel_color, int samples_per_pixel)
     b = sqrt(scale*b);
 
     // Write the translated [0, 255] value of each color component.
-    pixels[index++] = static_cast<int>(256*clamp(r, 0.0, 0.999));
-    pixels[index++] = static_cast<int>(256*clamp(g, 0.0, 0.999));
-    pixels[index++] = static_cast<int>(256*clamp(b, 0.0, 0.999));
+    r = static_cast<int>(256*clamp(r, 0.0, 0.999));
+    g = static_cast<int>(256*clamp(g, 0.0, 0.999));
+    b = static_cast<int>(256*clamp(b, 0.0, 0.999));
+
+    SDL_SetRenderDrawColor(renderer, r, g, b, SDL_ALPHA_OPAQUE);
+    SDL_RenderDrawPoint(renderer, 100, 100);
+    SDL_RenderPresent(renderer);
+
+    pixels[index++] = r;
+    pixels[index++] = g;
+    pixels[index++] = b;
 }
 
 void Surface::render()
