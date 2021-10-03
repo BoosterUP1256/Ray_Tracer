@@ -30,5 +30,3 @@ public:
 };
 
 #endif
-
-// TODO: next do 4.4 from ray tracing the next week

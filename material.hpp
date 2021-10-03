@@ -12,6 +12,11 @@ struct Hit_record;
 
 class Material {
 public:
+    virtual Color emitted(double u, double v, const Point3& p) const
+    {
+        return {0, 0, 0};
+    }
+
     virtual bool scatter(const Ray& r_in, const Hit_record& rec, Color& attenuation, Ray& scattered) const = 0;
 };
 
@@ -90,6 +95,27 @@ public:
 
         scattered = Ray(rec.p, direction, r_in.get_time());
         return true;
+    }
+};
+
+class Diffuse_light : public Material {
+public:
+    shared_ptr<Texture> emit;
+
+    explicit Diffuse_light(shared_ptr<Texture> a)
+            :emit(std::move(a)) { }
+
+    explicit Diffuse_light(Color c)
+            :emit(make_shared<Solid_color>(c)) { }
+
+    bool scatter(const Ray& r_in, const Hit_record& rec, Color& attenuation, Ray& scattered) const override
+    {
+        return false;
+    }
+
+    Color emitted(double u, double v, const Point3& p) const override
+    {
+        return emit->value(u, v, p);
     }
 };
 
