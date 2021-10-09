@@ -63,7 +63,7 @@ public:
 
 class Dielectric : public Material {
 private:
-    static double reflecatnce(double cosine, double ref_idx)
+    static double reflectance(double cosine, double ref_idx)
     {
         // Use Schlick's approximation for reflectance.
         double r0 = (1-ref_idx)/(1+ref_idx);
@@ -88,7 +88,7 @@ public:
 
         bool cannot_refract = refraction_ratio*sin_theta>1.0;
         Vec3 direction;
-        if (cannot_refract || reflecatnce(cos_theta, refraction_ratio)>random_double())
+        if (cannot_refract || reflectance(cos_theta, refraction_ratio)>random_double())
             direction = reflect(unit_direction, rec.normal);
         else
             direction = refract(unit_direction, rec.normal, refraction_ratio);

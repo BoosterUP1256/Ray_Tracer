@@ -143,7 +143,7 @@ Hittable_list cornell_box()
     return objects;
 }
 
-int main(int argc, char** argv)
+int main()
 {
     // Image
 
@@ -151,7 +151,7 @@ int main(int argc, char** argv)
     int image_width = 400;
     int image_height = static_cast<int>(image_width/aspect_ratio);
     int samples_per_pixel = 100;
-    const int max_depth = 50;
+    const int max_depth = 20;
 
     Surface image(image_width, image_height, "cornell_box.png");
 
@@ -228,7 +228,6 @@ int main(int argc, char** argv)
     Camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
 
     // Render
-    SDL_Event event;
 
     for (int j = image_height-1; j>=0; j--) {
         std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
@@ -244,13 +243,5 @@ int main(int argc, char** argv)
 
         }
     }
-
-    while (true) {
-        if (SDL_PollEvent(&event) && event.type==SDL_QUIT)
-            break;
-    }
     image.render();
-
-    SDL_Quit();
-    return 0;
 }
