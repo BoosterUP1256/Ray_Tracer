@@ -5,6 +5,7 @@
 #include "surface.hpp"
 #include "camera.hpp"
 #include "aarect.hpp"
+#include "box.hpp"
 
 Color ray_color(const Ray& r, const Color& background, const Hittable& world, int depth)
 {
@@ -139,6 +140,18 @@ Hittable_list cornell_box()
     objects.add(make_shared<Xz_rect>(0, 555, 0, 555, 0, white));
     objects.add(make_shared<Xz_rect>(0, 555, 0, 555, 555, white));
     objects.add(make_shared<Xy_rect>(0, 555, 0, 555, 555, white));
+    objects.add(make_shared<Box>(Point3(130, 0, 65), Point3(295, 165, 230), white));
+    objects.add(make_shared<Box>(Point3(265, 0, 295), Point3(430, 330, 460), white));
+
+    shared_ptr<Hittable> box1 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 330, 165), white);
+    box1 = make_shared<Rotate_y>(box1, 15);
+    box1 = make_shared<Translate>(box1, Vec3(265, 0, 295));
+    objects.add(box1);
+
+    shared_ptr<Hittable> box2 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 165, 165), white);
+    box2 = make_shared<Rotate_y>(box2, -18);
+    box2 = make_shared<Translate>(box2, Vec3(130, 0, 65));
+    objects.add(box2);
 
     return objects;
 }
@@ -226,7 +239,7 @@ int main()
     image_height = static_cast<int>(image_width/aspect_ratio);
 
     Camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
-    Surface image(image_width, image_height, "cornell_box.png");
+    Surface image(image_width, image_height, "cornell_box2.png");
 
     // Render
 
