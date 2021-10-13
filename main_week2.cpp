@@ -137,11 +137,9 @@ Hittable_list cornell_box()
     objects.add(make_shared<Yz_rect>(0, 555, 0, 555, 555, green));
     objects.add(make_shared<Yz_rect>(0, 555, 0, 555, 0, red));
     objects.add(make_shared<Xz_rect>(213, 343, 227, 332, 554, light));
-    objects.add(make_shared<Xz_rect>(0, 555, 0, 555, 0, white));
     objects.add(make_shared<Xz_rect>(0, 555, 0, 555, 555, white));
+    objects.add(make_shared<Xz_rect>(0, 555, 0, 555, 0, white));
     objects.add(make_shared<Xy_rect>(0, 555, 0, 555, 555, white));
-    objects.add(make_shared<Box>(Point3(130, 0, 65), Point3(295, 165, 230), white));
-    objects.add(make_shared<Box>(Point3(265, 0, 295), Point3(430, 330, 460), white));
 
     shared_ptr<Hittable> box1 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 330, 165), white);
     box1 = make_shared<Rotate_y>(box1, 15);
@@ -233,13 +231,14 @@ int main()
         vfov = 40.0;
         break;
     }
+    // TODO: next week 9.2
 
     Vec3 vup(0, 1, 0);
     double dist_to_focus = 10.0;
     image_height = static_cast<int>(image_width/aspect_ratio);
 
     Camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
-    Surface image(image_width, image_height, "cornell_box2.png");
+    Surface image(image_width, image_height, "cornell_box2_smoke.png");
 
     // Render
 

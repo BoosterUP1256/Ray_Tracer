@@ -1,8 +1,6 @@
 #ifndef RAY_TRACER_HITTABLE_HPP
 #define RAY_TRACER_HITTABLE_HPP
 
-#include <utility>
-
 #include "ray.hpp"
 #include "aabb.hpp"
 
