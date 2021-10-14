@@ -4,8 +4,6 @@
 #include "utilities.hpp"
 #include "vec3.hpp"
 
-#include <vector>
-
 class Surface {
 private:
     int index = 0;
