@@ -33,19 +33,10 @@ inline bool box_compare(const shared_ptr<Hittable>& a, const shared_ptr<Hittable
 }
 
 // TODO: refacter to be static methods (maybe do this to other classes as well like Vec3)
-bool box_x_compare(const shared_ptr<Hittable>& a, const shared_ptr<Hittable>& b)
-{
-    return box_compare(a, b, 1);
-}
+bool box_x_compare(const shared_ptr<Hittable>& a, const shared_ptr<Hittable>& b);
 
-bool box_y_compare(const shared_ptr<Hittable>& a, const shared_ptr<Hittable>& b)
-{
-    return box_compare(a, b, 1);
-}
+bool box_y_compare(const shared_ptr<Hittable>& a, const shared_ptr<Hittable>& b);
 
-bool box_z_compare(const shared_ptr<Hittable>& a, const shared_ptr<Hittable>& b)
-{
-    return box_compare(a, b, 2);
-}
+bool box_z_compare(const shared_ptr<Hittable>& a, const shared_ptr<Hittable>& b);
 
 #endif

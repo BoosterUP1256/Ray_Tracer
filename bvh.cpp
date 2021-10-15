@@ -58,3 +58,18 @@ bool Bvh_node::bounding_box(double time0, double time1, Aabb& output_box) const
     output_box = box;
     return true;
 }
+
+bool box_x_compare(const shared_ptr<Hittable>& a, const shared_ptr<Hittable>& b)
+{
+    return box_compare(a, b, 1);
+}
+
+bool box_y_compare(const shared_ptr<Hittable>& a, const shared_ptr<Hittable>& b)
+{
+    return box_compare(a, b, 1);
+}
+
+bool box_z_compare(const shared_ptr<Hittable>& a, const shared_ptr<Hittable>& b)
+{
+    return box_compare(a, b, 2);
+}

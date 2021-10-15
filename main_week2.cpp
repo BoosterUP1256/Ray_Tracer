@@ -7,6 +7,7 @@
 #include "aarect.hpp"
 #include "box.hpp"
 #include "constant_medium.hpp"
+#include "bvh.hpp"
 
 Color ray_color(const Ray& r, const Color& background, const Hittable& world, int depth)
 {
@@ -185,6 +186,71 @@ Hittable_list cornell_smoke()
     return objects;
 }
 
+Hittable_list final_scene()
+{
+    Hittable_list boxes1;
+    auto ground = make_shared<Lambertian>(Color(0.48, 0.83, 0.53));
+
+    const int boxes_per_side = 20;
+    for (int i = 0; i<boxes_per_side; i++) {
+        for (int j = 0; j<boxes_per_side; j++) {
+            auto w = 100.0;
+            auto x0 = -1000.0+i*w;
+            auto z0 = -1000.0+j*w;
+            auto y0 = 0.0;
+            auto x1 = x0+w;
+            auto y1 = random_double(1, 101);
+            auto z1 = z0+w;
+
+            boxes1.add(make_shared<Box>(Point3(x0, y0, z0), Point3(x1, y1, z1), ground));
+        }
+    }
+
+    Hittable_list objects;
+
+    objects.add(make_shared<Bvh_node>(boxes1, 0, 1));
+
+    auto light = make_shared<Diffuse_light>(Color(7, 7, 7));
+    objects.add(make_shared<Xz_rect>(123, 423, 147, 412, 554, light));
+
+    auto center1 = Point3(400, 400, 200);
+    auto center2 = center1+Vec3(30, 0, 0);
+    auto moving_sphere_material = make_shared<Lambertian>(Color(0.7, 0.3, 0.1));
+    objects.add(make_shared<Moving_sphere>(center1, center2, 0, 1, 50, moving_sphere_material));
+
+    objects.add(make_shared<Sphere>(Point3(260, 150, 45), 50, make_shared<Dielectric>(1.5)));
+    objects.add(make_shared<Sphere>(
+            Point3(0, 150, 145), 50, make_shared<Metal>(Color(0.8, 0.8, 0.9), 1.0)
+    ));
+
+    auto boundary = make_shared<Sphere>(Point3(360, 150, 145), 70, make_shared<Dielectric>(1.5));
+    objects.add(boundary);
+    objects.add(make_shared<Constant_medium>(boundary, 0.2, Color(0.2, 0.4, 0.9)));
+    boundary = make_shared<Sphere>(Point3(0, 0, 0), 5000, make_shared<Dielectric>(1.5));
+    objects.add(make_shared<Constant_medium>(boundary, .0001, Color(1, 1, 1)));
+
+    auto emat = make_shared<Lambertian>(make_shared<Image_texture>("../resources/earthmap.jpg"));
+    objects.add(make_shared<Sphere>(Point3(400, 200, 400), 100, emat));
+    auto pertext = make_shared<Noise_texture>(0.1);
+    objects.add(make_shared<Sphere>(Point3(220, 280, 300), 80, make_shared<Lambertian>(pertext)));
+
+    Hittable_list boxes2;
+    auto white = make_shared<Lambertian>(Color(.73, .73, .73));
+    int ns = 1000;
+    for (int j = 0; j<ns; j++) {
+        boxes2.add(make_shared<Sphere>(Point3::random(0, 165), 10, white));
+    }
+
+    objects.add(make_shared<Translate>(
+                    make_shared<Rotate_y>(
+                            make_shared<Bvh_node>(boxes2, 0.0, 1.0), 15),
+                    Vec3(-100, 270, 395)
+            )
+    );
+
+    return objects;
+}
+
 int main()
 {
     // Image
@@ -233,7 +299,6 @@ int main()
         vfov = 20.0;
         break;
 
-    default:
     case 4:
         world = earth();
         background = Color(0.70, 0.80, 1.00);
@@ -271,15 +336,26 @@ int main()
         lookat = Point3(278, 278, 0);
         vfov = 40.0;
         break;
+
+    default:
+    case 8:
+        world = final_scene();
+        aspect_ratio = 1.0;
+        image_width = 800;
+        samples_per_pixel = 100;
+        background = Color(0, 0, 0);
+        lookfrom = Point3(478, 278, -600);
+        lookat = Point3(278, 278, 0);
+        vfov = 40.0;
+        break;
     }
-    // TODO: next week 9.2
 
     Vec3 vup(0, 1, 0);
     double dist_to_focus = 10.0;
     image_height = static_cast<int>(image_width/aspect_ratio);
 
     Camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
-    Surface image(image_width, image_height, "earth.png");
+    Surface image(image_width, image_height, "final_week2.png");
 
     // Render
 
