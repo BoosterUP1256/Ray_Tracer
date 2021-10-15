@@ -233,6 +233,7 @@ int main()
         vfov = 20.0;
         break;
 
+    default:
     case 4:
         world = earth();
         background = Color(0.70, 0.80, 1.00);
@@ -261,7 +262,6 @@ int main()
         vfov = 40.0;
         break;
 
-    default:
     case 7:
         world = cornell_smoke();
         aspect_ratio = 1.0;
@@ -279,7 +279,7 @@ int main()
     image_height = static_cast<int>(image_width/aspect_ratio);
 
     Camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
-    Surface image(image_width, image_height, "cornell_box2_smoke.png");
+    Surface image(image_width, image_height, "earth.png");
 
     // Render
 
