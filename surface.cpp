@@ -1,9 +1,5 @@
 #include "surface.hpp"
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-
-#include "external/stb_image_write.h"
-
 Surface::Surface(int _width, int _height, const char* _filename)
         :width(_width), height(_height), filename(_filename)
 {
@@ -35,5 +31,5 @@ void Surface::write_color(Color pixel_color, int samples_per_pixel)
 
 void Surface::render()
 {
-    stbi_write_png(filename, width, height, 3, pixels, width*3);
+    ImageIO::make_image(filename, width, height, pixels);
 }

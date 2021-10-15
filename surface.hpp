@@ -3,6 +3,7 @@
 
 #include "utilities.hpp"
 #include "vec3.hpp"
+#include "imageIO.hpp"
 
 class Surface {
 private:

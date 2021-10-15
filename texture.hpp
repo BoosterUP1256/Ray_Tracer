@@ -3,10 +3,7 @@
 
 #include "ray.hpp"
 #include "perlin.hpp"
-
-#define STB_IMAGE_IMPLEMENTATION
-
-#include "external/stb_image.h"
+#include "imageIO.hpp"
 
 class Texture {
 public:
@@ -87,7 +84,7 @@ public:
     {
         int components_per_pixel = bytes_per_pixel;
 
-        data = stbi_load(filename, &width, &height, &components_per_pixel, components_per_pixel);
+        data = ImageIO::load_image(filename, width, height, components_per_pixel);
 
         if (!data) {
             std::cerr << "ERROR: Could not load texture image file ' " << filename << "'.\n";
