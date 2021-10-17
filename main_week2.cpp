@@ -251,6 +251,36 @@ Hittable_list final_scene()
     return objects;
 }
 
+Hittable_list my_scene()
+{
+    Hittable_list objects;
+
+    auto red = make_shared<Lambertian>(Color(.65, .05, .05));
+    auto white = make_shared<Lambertian>(Color(.73, .73, .73));
+    auto green = make_shared<Lambertian>(Color(.12, .45, .15));
+    auto light = make_shared<Diffuse_light>(Color(15, 15, 15));
+
+    objects.add(make_shared<Yz_rect>(0, 555, 0, 555, 555, green));
+    objects.add(make_shared<Yz_rect>(0, 555, 0, 555, 0, red));
+    objects.add(make_shared<Xz_rect>(213, 343, 227, 332, 554, light));
+    objects.add(make_shared<Xz_rect>(0, 555, 0, 555, 555, white));
+    objects.add(make_shared<Xz_rect>(0, 555, 0, 555, 0, white));
+    objects.add(make_shared<Xy_rect>(0, 555, 0, 555, 555, white));
+
+
+    shared_ptr<Hittable> box1 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 330, 165), white);
+    box1 = make_shared<Rotate_y>(box1, 15);
+    box1 = make_shared<Translate>(box1, Vec3(265, 0, 295));
+    objects.add(box1);
+
+    shared_ptr<Hittable> box2 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 165, 165), white);
+    box2 = make_shared<Rotate_y>(box2, -18);
+    box2 = make_shared<Translate>(box2, Vec3(130, 0, 65));
+    objects.add(box2);
+
+    return objects;
+}
+
 int main()
 {
     // Image
@@ -342,7 +372,7 @@ int main()
         world = final_scene();
         aspect_ratio = 1.0;
         image_width = 800;
-        samples_per_pixel = 100;
+        samples_per_pixel = 10000;
         background = Color(0, 0, 0);
         lookfrom = Point3(478, 278, -600);
         lookat = Point3(278, 278, 0);
