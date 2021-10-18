@@ -259,6 +259,7 @@ Hittable_list my_scene()
     auto white = make_shared<Lambertian>(Color(.73, .73, .73));
     auto green = make_shared<Lambertian>(Color(.12, .45, .15));
     auto light = make_shared<Diffuse_light>(Color(15, 15, 15));
+    auto glass = make_shared<Metal>(Color(0.8, 0.8, 0.8), 0.50);
 
     objects.add(make_shared<Yz_rect>(0, 555, 0, 555, 555, green));
     objects.add(make_shared<Yz_rect>(0, 555, 0, 555, 0, red));
@@ -267,6 +268,8 @@ Hittable_list my_scene()
     objects.add(make_shared<Xz_rect>(0, 555, 0, 555, 0, white));
     objects.add(make_shared<Xy_rect>(0, 555, 0, 555, 555, white));
 
+    for (int pos = 255; pos<=1000; pos += 100)
+        objects.add(make_shared<Sphere>(Point3(0, pos, 555), 100, glass));
 
     shared_ptr<Hittable> box1 = make_shared<Box>(Point3(0, 0, 0), Point3(165, 330, 165), white);
     box1 = make_shared<Rotate_y>(box1, 15);
@@ -367,7 +370,6 @@ int main()
         vfov = 40.0;
         break;
 
-    default:
     case 8:
         world = final_scene();
         aspect_ratio = 1.0;
@@ -378,6 +380,17 @@ int main()
         lookat = Point3(278, 278, 0);
         vfov = 40.0;
         break;
+
+    default:
+    case 9:
+        world = my_scene();
+        aspect_ratio = 1.0;
+        image_width = 600;
+        samples_per_pixel = 75;
+        lookfrom = Point3(278, 278, -800);
+        lookat = Point3(278, 278, 0);
+        vfov = 40.0;
+        break;
     }
 
     Vec3 vup(0, 1, 0);
@@ -385,7 +398,7 @@ int main()
     image_height = static_cast<int>(image_width/aspect_ratio);
 
     Camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
-    Surface image(image_width, image_height, "final_week2.png");
+    Surface image(image_width, image_height, "my_scene.png");
 
     // Render
 
